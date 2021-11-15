@@ -1,0 +1,25 @@
+version: "2.1"
+
+executors:
+  # `main` uses the `cimg/go:1.17` docker image.
+  main:
+    docker:
+      - image: cimg/go:1.17
+
+jobs:
+
+  # `test_go` tests the source code.
+  test_go:
+    executor: main
+    steps:
+      - checkout
+      - run: make fmt
+      - run: make imports
+      - run: make test_go
+      - run: git diff --exit-code
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - test_go
